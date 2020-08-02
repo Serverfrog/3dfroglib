@@ -1,11 +1,22 @@
 package de.serverfrog.froglib
 
-import io.micronaut.runtime.Micronaut.*
+import de.serverfrog.froglib.config.Config
+import de.serverfrog.froglib.config.ConfigFactory
+import de.serverfrog.froglib.config.Datasource
+import de.serverfrog.froglib.config.UserProperties
+import de.serverfrog.froglib.ui.UiMain
+import io.micronaut.runtime.Micronaut.build
 
 fun main(args: Array<String>) {
-	build()
-	    .args(*args)
-		.packages("de.serverfrog.froglib")
-		.start()
+    val mainpackage = "de.serverfrog.froglib"
+    val application = build()
+            .args(*args)
+            .propertySources(Datasource.getDatasourceProperty())
+            .packages("$mainpackage.config", "$mainpackage.ui", mainpackage)
+            .singletons(ConfigFactory::class.java, Config::class.java, UserProperties::class.java)
+            .eagerInitSingletons(true)
+            .start()
+    println(application.findBean(UiMain::class.java))
+
 }
 
