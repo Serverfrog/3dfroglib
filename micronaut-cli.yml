@@ -1,6 +1,0 @@
-applicationType: default
-defaultPackage: de.serverfrog.froglib
-testFramework: junit
-sourceLanguage: kotlin
-buildTool: gradle
-features: [app-name, data, data-jpa, docker, file-watch, gradle, h2, http-client, jackson-xml, jdbc-hikari, junit, kotlin, kotlin-application, kotlin-extension-functions, logback, netty-server, readme, shade, yaml]

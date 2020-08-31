@@ -4,30 +4,16 @@ import com.typesafe.config.ConfigFactory
 import com.typesafe.config.ConfigRenderOptions
 import io.github.config4k.extract
 import io.github.config4k.toConfig
-import io.micronaut.context.annotation.Bean
-import io.micronaut.context.annotation.Context
-import io.micronaut.context.annotation.Factory
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import javax.inject.Singleton
 
 
-@Factory
 class ConfigFactory {
-    @Singleton
-    fun getConfig(): Config {
-        val configFile = getUserConfigPath().resolve("user.config")
-        val exists = Files.exists(configFile)
-        if (!exists) {
-            createConfig(configFile)
-        }
-        val configString = String(Files.readAllBytes(configFile))
-        return ConfigFactory.parseString(configString).extract("config")
 
-    }
+
     companion object {
         enum class OS {
             WINDOWS, LINUX, MAC
@@ -37,7 +23,25 @@ class ConfigFactory {
 
         val logger: Logger = LoggerFactory.getLogger(ConfigFactory::class.java)
 
+        fun getConfig(): Config {
+            val configFile = getUserConfigPath().resolve("user.config")
+            val exists = Files.exists(configFile)
+            if (!exists) {
+                createConfig(configFile)
+            }
+            val configString = String(Files.readAllBytes(configFile))
+            return ConfigFactory.parseString(configString).extract("config")
 
+        }
+
+        fun save(config: Config){
+            val configFile = getUserConfigPath().resolve("user.config")
+            val defaults = ConfigRenderOptions.defaults()
+            val render = config.toConfig("config")
+                    .root().render(defaults)
+
+            Files.write(configFile, render.toByteArray())
+        }
 
         fun getUserConfigPath(): Path {
             val configPath = StringBuilder()

@@ -1,6 +1,5 @@
 package de.serverfrog.froglib.config
 
-import io.micronaut.context.env.PropertySource
 
 
 class Datasource {
@@ -13,24 +12,13 @@ class Datasource {
         val schemaGenerate = "CREATE"
         val dialect = "H2"
 
-        fun getDatasourceProperty(): PropertySource? {
+
+        fun getJDBCUrl(): String {
             val databasePath = ConfigFactory.getUserConfigPath()
                     .resolve("database.h2")
                     .toUri().toString()
                     .substring(8) // remove file:////
-            val databaseUrl = "jdbc:h2:file:$databasePath"
-
-            return PropertySource.of(
-                    mapOf(
-                        "$datasourcePrefix.url" to databaseUrl,
-                        "$datasourcePrefix.driverClassName" to driverClassName,
-                        "$datasourcePrefix.username" to username,
-                        "$datasourcePrefix.password" to password,
-                        "$datasourcePrefix.schemaGenerate" to schemaGenerate,
-                        "$datasourcePrefix.dialect" to dialect
-                    )
-            )
-
+            return "jdbc:h2:file:$databasePath"
         }
     }
 }

@@ -1,26 +1,12 @@
 package de.serverfrog.froglib.config
 
-import com.typesafe.config.ConfigFactory
-import io.micronaut.context.annotation.Context
-import io.micronaut.context.annotation.Requires
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import javax.annotation.PostConstruct
-import javax.inject.Inject
-import javax.inject.Singleton
+import java.nio.file.Path
 
 
-@Singleton
-class UserProperties() {
+class UserProperties(config: Config) {
 
-    val logger: Logger = LoggerFactory.getLogger(UserProperties::class.java)
-    @Inject
-    lateinit var config: Config
+    companion object {
+        val userProperties: UserProperties = UserProperties(ConfigFactory.getConfig())
 
-    @PostConstruct
-    fun onPostConstruct(){
-        println("config")
-        logger.info("Config Inits. $config")
     }
-
 }

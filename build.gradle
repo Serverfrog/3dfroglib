@@ -20,41 +20,23 @@ configurations {
 }
 
 dependencies {
-    kapt(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    kapt("io.micronaut:micronaut-inject-java")
-    kapt("io.micronaut:micronaut-validation")
-    kapt("io.micronaut.data:micronaut-data-processor")
-    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    implementation("io.micronaut:micronaut-inject")
-    implementation("io.micronaut:micronaut-validation")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
-    implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
-    implementation("io.micronaut:micronaut-runtime")
-    implementation("io.micronaut:micronaut-http-server-netty")
-    implementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
-    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
-    implementation("io.micronaut.kotlin:micronaut-kotlin-extension-functions")
-    implementation("io.micronaut.xml:micronaut-jackson-xml")
 
     implementation("io.github.config4k:config4k:0.4.2")
     implementation("no.tornado:tornadofx:1.7.20")
 
-    runtimeOnly("ch.qos.logback:logback-classic")
-    runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
-    runtimeOnly("com.h2database:h2")
-    kaptTest(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    kaptTest("io.micronaut:micronaut-inject-java")
-    testImplementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testImplementation("io.micronaut.test:micronaut-test-junit5")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    compile("org.jetbrains.exposed:exposed-core:0.24.1")
+    compile("org.jetbrains.exposed:exposed-dao:0.24.1")
+    compile("org.jetbrains.exposed:exposed-jdbc:0.24.1")
+
+    implementation("com.h2database:h2:1.4.200")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
 }
 
 test.classpath += configurations.developmentOnly
 
-mainClassName = "de.serverfrog.froglib.ApplicationKt"
+mainClassName = "de.serverfrog.froglib.ui.MainApp"
 
 // use JUnit 5 platform
 test {
@@ -66,8 +48,6 @@ java {
 }
 
 allOpen {
-    annotation("io.micronaut.aop.Around")
-    annotation("io.micronaut.scheduling.annotation.Async")
 }
 compileKotlin {
     kotlinOptions {
@@ -84,10 +64,6 @@ compileTestKotlin {
 }
 kapt {
     arguments {
-        arg("micronaut.processing.incremental", true)
-        arg("micronaut.processing.annotations", "de.serverfrog.froglib.*")
-        arg("micronaut.processing.group", "de.serverfrog.froglib")
-        arg("micronaut.processing.module", "3dfroglib")
     }
 }
 
@@ -95,17 +71,6 @@ shadowJar {
     mergeServiceFiles()
 }
 
-tasks.withType(JavaExec) {
-    classpath += configurations.developmentOnly
-    jvmArgs('-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')
-    if (gradle.startParameter.continuous) {
-        systemProperties(
-            'micronaut.io.watch.restart':'true',
-            'micronaut.io.watch.enabled':'true',
-            "micronaut.io.watch.paths":"src/main"
-        )
-    }
-}
 
 
 
