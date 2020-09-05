@@ -22,9 +22,33 @@ jobs:
           java-version: 11
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/gradle-jdk11@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
       - name: Build with Gradle
         run: ./gradlew build
       - uses: actions/upload-artifact@v2
         with:
           name: Package
           path: build/libs
+      - name: Upload coverage to Codecov
+          uses: codecov/codecov-action@v1
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            flags: unittests
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          git fetch --prune --unshallow --tags
+      - uses: snyk/release-notes-preview@v1.6.1
+        with:
+          releaseBranch: master
+        env:
+          GITHUB_PR_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

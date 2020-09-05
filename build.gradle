@@ -4,6 +4,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.allopen" version "1.3.72"
     id "com.github.johnrengelman.shadow" version "6.0.0"
     id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'jacoco'
     id "application"
 }
 
@@ -42,6 +43,7 @@ mainClassName = "de.serverfrog.froglib.ui.MainApp"
 // use JUnit 5 platform
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 java {
@@ -75,7 +77,25 @@ kapt {
 shadowJar {
     mergeServiceFiles()
 }
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
 
+task codeCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 
+    subprojects.each {
+        sourceSets it.sourceSets.main
+    }
 
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco/report.xml")
+        html.enabled false
+        csv.enabled false
+    }
+}
 
+codeCoverageReport.dependsOn {
+    subprojects*.test
+}
