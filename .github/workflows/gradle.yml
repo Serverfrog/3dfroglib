@@ -23,12 +23,6 @@ jobs:
       - uses: actions/checkout@master
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/gradle-jdk11@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: monitor
       - name: Build with Gradle
         run: ./gradlew build
       - uses: actions/upload-artifact@v2
