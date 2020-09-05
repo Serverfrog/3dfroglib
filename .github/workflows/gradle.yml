@@ -36,10 +36,10 @@ jobs:
           name: Package
           path: build/libs
       - name: Upload coverage to Codecov
-          uses: codecov/codecov-action@v1
-          with:
-            token: ${{ secrets.CODECOV_TOKEN }}
-            flags: unittests
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unittests
   preview:
     runs-on: ubuntu-latest
     steps:
