@@ -47,6 +47,7 @@ jobs:
       - run: |
           git fetch --prune --unshallow --tags
       - uses: snyk/release-notes-preview@v1.6.1
+        continue-on-error: true
         with:
           releaseBranch: master
         env:
