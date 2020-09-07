@@ -30,7 +30,7 @@ jobs:
           name: Package
           path: build/libs
       - name: Code Coverage Report with Gradle
-        run: ./gradlew codeCoverageReport
+        run: ./gradlew jacocoTestReport
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
