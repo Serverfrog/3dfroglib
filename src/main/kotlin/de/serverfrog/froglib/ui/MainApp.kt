@@ -1,13 +1,12 @@
 package de.serverfrog.froglib.ui
 
-import de.serverfrog.froglib.config.UserProperties
 import de.serverfrog.froglib.database.DatabaseManager
 import javafx.stage.Stage
 import tornadofx.*
 
 class MainApp : App() {
 
-    companion object{
+    companion object {
         fun main(args: Array<String>) {
             launch<MainApp>(args)
         }
@@ -15,7 +14,6 @@ class MainApp : App() {
 
     override val primaryView = MainView::class
 
-    val userProperties = UserProperties.userProperties
 
     val databaseManager = DatabaseManager()
 

@@ -26,7 +26,6 @@ class ImportThingiverseMenu : View("My View") {
             hbox(4.0) {
                 progressbar(status.progress)
                 label(status.message)
-//                visibleWhen { status.running }
                 paddingAll = 4
             }
         }

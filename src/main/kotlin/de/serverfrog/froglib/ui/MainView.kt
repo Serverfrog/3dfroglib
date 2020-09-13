@@ -17,7 +17,7 @@ class MainView : View() {
                 item("Settings").action {
                     openInternalWindow(SettingsMenu::class)
                 }
-            }
+    }
             menu("Import") {
                 item("from Thingiverse").action {
                     openInternalWindow(ImportThingiverseMenu::class)
@@ -25,10 +25,12 @@ class MainView : View() {
             }
         }
 
-        tableview<Model>(models) {
+        tableview(models) {
             readonlyColumn("Name", Model::name)
-            readonlyColumn("Description", Model::description)
-            smartResize()
+            readonlyColumn("Description", Model::description) {
+                hgrow = Priority.ALWAYS
+                prefWidth = Double.MAX_VALUE
+            }
 
             hgrow = Priority.ALWAYS
             vgrow = Priority.ALWAYS

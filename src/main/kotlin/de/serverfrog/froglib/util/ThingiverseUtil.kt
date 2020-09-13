@@ -2,20 +2,23 @@ package de.serverfrog.froglib.util
 
 import de.serverfrog.froglib.config.ConfigFactory
 import tornadofx.*
-import java.io.*
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.net.URL
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
+import java.util.zip.ZipFile
 import javax.net.ssl.HttpsURLConnection
 
 
 object ThingiverseUtil {
 
-    const val regex = "https:\\/\\/www\\.thingiverse\\.com\\/thing:\\d+"
+    const val regex = "https://www\\.thingiverse\\.com/thing:\\d+"
 
     fun downloadAndSave(url: String, status: TaskStatus, onComplete: () -> Unit) {
         runAsync(status) {
@@ -79,12 +82,14 @@ object ThingiverseUtil {
 
     fun FXTask<*>.unzip(file: File, dest: File) {
         val buffer = ByteArray(1024)
-        val zis = ZipInputStream(FileInputStream(file))
-        var zipEntry = zis.nextEntry
+        val zis = ZipFile(file)
+        val entries = zis.entries()
+
+        var zipEntry = entries.nextElement()
         while (zipEntry != null) {
             val newFile: File = newFile(dest, zipEntry)
             if (zipEntry.isDirectory) {
-                zipEntry = zis.nextEntry
+                zipEntry = entries.nextElement()
                 continue
             }
 
@@ -94,15 +99,20 @@ object ThingiverseUtil {
 
             updateMessage("decompress ${zipEntry.name}")
             updateProgress(current, len.toLong())
-            while (zis.read(buffer).also { len = it } > 0) {
+            val inputStream = zis.getInputStream(zipEntry)
+
+            while (inputStream.read(buffer).also { len = it } > 0) {
                 fos.write(buffer, 0, len)
                 current += len
                 updateProgress(current, len.toLong())
             }
             fos.close()
-            zipEntry = zis.nextEntry
+            if (entries.hasMoreElements()) {
+                zipEntry = entries.nextElement()
+            } else {
+                zipEntry = null
+            }
         }
-        zis.closeEntry()
         zis.close()
     }
 
@@ -118,7 +128,11 @@ object ThingiverseUtil {
         if (zipEntry.isDirectory) {
             destFile.mkdirs()
         } else {
-            Files.createFile(destFile.toPath())
+            if (destFile.exists()) {
+                Files.delete(destFile.toPath())
+            } else {
+                Files.createFile(destFile.toPath())
+            }
         }
         return destFile
     }

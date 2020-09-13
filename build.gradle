@@ -35,6 +35,13 @@ dependencies {
 
     implementation("com.h2database:h2:1.4.200")
 
+    testImplementation("org.testfx:testfx-core:4.0.16-alpha")
+    testImplementation("org.testfx:testfx-junit5:4.0.16-alpha")
+    testImplementation("org.testfx:openjfx-monocle:jdk-11+26")
+
+    testImplementation("org.mockito:mockito-core:3.5.10")
+    testImplementation("org.mockito:mockito-junit-jupiter:3.5.10")
+
     testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
 }
@@ -50,22 +57,26 @@ test {
 }
 
 java {
-    sourceCompatibility = JavaVersion.toVersion('11')
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
 }
 javafx {
-    version = "11.0.2"
-    modules = ['javafx.controls', 'javafx.graphics']
+        version = "11.0.2"
+        modules = ['javafx.controls', 'javafx.graphics']
 }
 
 allOpen {
 }
 compileKotlin {
+
     kotlinOptions {
         jvmTarget = '11'
         //Will retain parameter names for Java reflection
         javaParameters = true
     }
 }
+
 compileTestKotlin {
     kotlinOptions {
         jvmTarget = '11'
