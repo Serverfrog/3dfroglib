@@ -23,10 +23,9 @@ jobs:
       - uses: actions/checkout@master
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
-      - name: Start XVFB
-        run: export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start;
       - name: Build with Gradle
-        run: ./gradlew build --full-stacktrace
+        uses: GabrielBB/xvfb-action@v1
+        run: export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start;./gradlew build --full-stacktrace
         env:
           JAVA_OPTIONS: "-Djava.awt.headless=true -Dtestfx.robot=glass -Dtestfx.headless=true -Dprism.order=sw"
       - uses: actions/upload-artifact@v2
