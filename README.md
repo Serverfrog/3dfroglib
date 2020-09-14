@@ -1,4 +1,4 @@
 # 3DFrogLib
 
-![Java CI with Gradle](https://github.com/Serverfrog/3dfroglib/workflows/Java%20CI%20with%20Gradle/badge.svg)
+[![Build Status](https://travis-ci.com/Serverfrog/3dfroglib.svg?branch=master)](https://travis-ci.com/Serverfrog/3dfroglib)
 [![codecov](https://codecov.io/gh/Serverfrog/3dfroglib/branch/master/graph/badge.svg?token=FJMIX5V6PI)](https://codecov.io/gh/Serverfrog/3dfroglib)
