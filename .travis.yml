@@ -39,7 +39,7 @@ before_install:
 install: true
 
 before_script:
-  - if [[ "${TRAVIS_OS_NAME}" == osx ]]; then brew update; brew reinstall homebrew/cask-versions/java8; fi
+  - if [[ "${TRAVIS_OS_NAME}" == osx ]]; then brew update; brew install openjdk@11; fi
 
 script:
   - ./gradlew check
